@@ -3,7 +3,7 @@ HOST?=localhost
 PORT?=3000
 SINGULARITY_HOST?=localhost
 SINGULARITY_PORT?=7099
-SINGULARITY_BASE?='/singularity'
+SINGULARITY_BASE?=/singularity
 
 usage :
 	@echo ''
@@ -21,9 +21,6 @@ setup:
 
 clean:
 	rm -rf node_modules
-
-echo:
-	@echo '$(SINGULARITY_BASE)'
 
 server:
 	HOST=$(HOST) PORT=$(PORT) SINGULARITY_HOST=$(SINGULARITY_HOST) SINGULARITY_PORT=$(SINGULARITY_PORT) SINGULARITY_BASE=$(SINGULARITY_BASE) node queequeg.js
