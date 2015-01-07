@@ -1,8 +1,10 @@
 var url = require('url'),
     async = require('async'),
+    createAmqp = require('./lib/amqp'),
     createServer = require('./lib/server'),
     createSingularity = require('./lib/singularity'),
-    hookRegistration = require('./lib/hooks/registration');
+    hookRegistration = require('./lib/hooks/registration'),
+    hookAction = require('./lib/hooks/action');
 
 function formatUrl(hostname, port, pathname) {
     return url.format({
@@ -35,6 +37,8 @@ var serverConfig = {
     pathPrefix: "/webhook"
 };
 
+var amqpConfig = {};
+
 var hookBaseUrl = url.format({
     protocol: "http",
     hostname: serverConfig.host,
@@ -64,15 +68,17 @@ process.on('SIGINT', function() {
     });
 });
 
-server = createServer(serverConfig, function () {
-    console.log('========================================================================');
-    console.log('== QUEEQUEG - Singularity webhook debugger listening at %s', hookBaseUrl);
-    console.log('==');
-    console.log('== using singularity at %s', singularityUrl);
+createAmqp(amqpConfig, function(err, amqp) {
+    server = createServer(serverConfig, hookAction(amqp), function () {
+        console.log('========================================================================');
+        console.log('== QUEEQUEG - Singularity webhook debugger listening at %s', hookBaseUrl);
+        console.log('==');
+        console.log('== using singularity at %s', singularityUrl);
 
-    // register hooks with singulariy
-    async.each(hooks, addWebhook, function(err) {
-        if (err) throw err;
-        console.log("== All hooks enabled");
+        // register hooks with singulariy
+        async.each(hooks, addWebhook, function(err) {
+            if (err) throw err;
+            console.log("== All hooks enabled");
+        });
     });
 });
