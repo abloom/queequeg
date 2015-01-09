@@ -59,6 +59,8 @@ var _temp = hookRegistration(singularity, hookBaseUrl),
     addWebhook = _temp.addWebhook,
     deleteWebhook = _temp.deleteWebhook;
 
+var hooks = [ 'task', 'deploy', 'request' ];
+
 process.on('SIGINT', function() {
     console.log("");
 
