@@ -39,20 +39,6 @@ var serverConfig = {
 
 var amqpConfig = {};
 
-var hookBaseUrl = url.format({
-    protocol: "http",
-    hostname: serverConfig.host,
-    port: serverConfig.port,
-    pathname: serverConfig.pathPrefix
-});
-
-var singularityUrl = url.format({
-    protocol: "http",
-    port: process.env.SINGULARITY_PORT || 7099,
-    hostname: process.env.SINGULARITY_HOST || host,
-    pathname: process.env.SINGULARITY_BASE || '/singularity',
-});
-
 var singularity = createSingularity(singularityUrl);
 
 var _temp = hookRegistration(singularity, hookBaseUrl),
